@@ -1,4 +1,4 @@
-using System.ComponetModel.DataAnnotations:
+using System.ComponetModel.DataAnnotations
 
 public class Theater
 {
