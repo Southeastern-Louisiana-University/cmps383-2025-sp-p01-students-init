@@ -65,6 +65,9 @@ namespace Selu383.SP25.Api
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+                // Automatic Migration
+                dbContext.Database.Migrate();
+
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.EnsureCreated();
             }
