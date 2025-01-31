@@ -1,5 +1,9 @@
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.EntityFrameworkCore;
+using Selu383.SP25.Api.Entity;
+using IdentityModel;
 
 namespace Selu383.SP25.Api
 {
@@ -16,6 +20,32 @@ namespace Selu383.SP25.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // SQL Connection
+            builder.Services.AddDbContext<ApplicationDbContext>(Options =>
+            {
+                Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            // Dependency injection for user manager
+            builder.Services.AddIdentity<User, Role>(
+                options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 8;
+                    options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;     //smth library that manages claims
+                    options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
+                    options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            // Register UserManager
+            builder.Services.AddScoped<UserManager<User>>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -29,6 +59,15 @@ namespace Selu383.SP25.Api
 
             // Redirect root URL to Swagger UI
             app.UseRewriter(new RewriteOptions().AddRedirect("^$", "swagger"));
+
+            // Ensure database is deleted and recreated
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                dbContext.Database.EnsureDeleted();
+                dbContext.Database.EnsureCreated();
+            }
 
             app.UseHttpsRedirection();
 
