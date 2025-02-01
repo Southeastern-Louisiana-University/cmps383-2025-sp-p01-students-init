@@ -8,7 +8,6 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Seed data: 3 pre-populated theater records
         modelBuilder.Entity<Theater>().HasData(
             new Theater { Id = 1, Name = "Lions Den Grande Theater", Address = "123 W University Ave", SeatCount = 200 },
             new Theater { Id = 2, Name = "Lions Den Mega Theater", Address = "456 Palace Dr", SeatCount = 150 },

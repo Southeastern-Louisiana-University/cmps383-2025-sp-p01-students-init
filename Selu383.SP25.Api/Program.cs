@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace Selu383.SP25.Api
 {
@@ -30,18 +31,19 @@ namespace Selu383.SP25.Api
                 var service = scope.ServiceProvider;
                 try
                 {
-                    var DbContext = services.GetRequiredServices<DataContext>();
+                    var dbContext = services.GetRequiredServices<DataContext>();
+                    dbContext.Database.Migrate();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Database migration failed");
+                    Console.WriteLine($"Database migration failed: {ex.Message}");
                 }
             }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                //app.MapOpenApi();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
