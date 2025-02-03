@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Selu383.SP25.Api.Data;
+
 
 namespace Selu383.SP25.Api
 {
@@ -12,6 +15,12 @@ namespace Selu383.SP25.Api
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+            
+            // Register the DbContext
+            builder.Services.AddDbContext<DataContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("TheaterDB")));
+
+
 
             var app = builder.Build();
 
