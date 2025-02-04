@@ -1,26 +1,33 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using Selu383.SP25.Api.Entities;
+using System.Diagnostics.Metrics;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Selu383.SP25.Api.Data
 {
     public class DataContext : DbContext
     {
-        // Constructor that takes DbContextOptions and passes them to the base class
-        public DataContext(DbContextOptions<DataContext> options)
-            : base(options)
+
+        protected readonly IConfiguration Configuration;
+
+        public DataContext(IConfiguration configuration)
         {
+            Configuration = configuration;
+            
         }
 
-        // Define DbSets for your entities (tables)
-        //public DbSet<Customer> Customers { get; set; }
-        //public DbSet<Order> Orders { get; set; }
-
-        // (Optional) Override OnModelCreating for custom configuration
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
-            // Example: modelBuilder.Entity<Customer>().ToTable("tblCustomer");
+            // connect to sql server with connection string from app settings
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("TheaterDB"));
         }
+
+        public DbSet<Hotel> Hotel { get; set; }
+               
     }
+
+
+
 }
+

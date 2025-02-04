@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using Selu383.SP25.Api.Data;
-
+using Selu383.SP25.Api.Entities;
+using Selu383.SP25.Api.Seeding;
 
 namespace Selu383.SP25.Api
 {
@@ -10,17 +12,12 @@ namespace Selu383.SP25.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            
-            // Register the DbContext
-            builder.Services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("TheaterDB")));
 
-
+            builder.Services.AddDbContext<DataContext>();
+            builder.Services.AddScoped<DbInitializer>();
 
             var app = builder.Build();
 
@@ -28,7 +25,13 @@ namespace Selu383.SP25.Api
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapScalarApiReference();
+                app.UseItToSeedSqlServer();
+                
+
             }
+
+            
 
             app.UseHttpsRedirection();
 
@@ -37,7 +40,11 @@ namespace Selu383.SP25.Api
 
             app.MapControllers();
 
+
             app.Run();
         }
+
+
     }
+
 }
