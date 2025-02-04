@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Selu383.SP25.Api
+using Selu383.SP25.Api;
 
 public class DataContext : DbContext
 {
