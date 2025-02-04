@@ -14,6 +14,8 @@ namespace Selu383.SP25.Api
         }
 
         // Define each entity below
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

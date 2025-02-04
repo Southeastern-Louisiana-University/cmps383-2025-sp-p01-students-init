@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Selu383.SP25.Api.Entity;
 using IdentityModel;
+using Selu383.SP25.Api.Data.Services;
 
 namespace Selu383.SP25.Api
 {
@@ -43,6 +44,12 @@ namespace Selu383.SP25.Api
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            // Service Injections
+            builder.Services.AddScoped<IMoviesService, MoviesService>();
+            builder.Services.AddScoped<IReviewsService, ReviewsService>();
+
+
+
             // Register UserManager
             builder.Services.AddScoped<UserManager<User>>();
 
@@ -64,6 +71,9 @@ namespace Selu383.SP25.Api
             using (var scope = app.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                // Automatic Migration
+                //dbContext.Database.Migrate();
 
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.EnsureCreated();
