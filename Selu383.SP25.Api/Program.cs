@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Selu383.SP25.Api.Entity;
 using IdentityModel;
 using Selu383.SP25.Api.Data.Services;
+using Selu383.SP25.Api.Entity.Payment;
+using Stripe;
 
 namespace Selu383.SP25.Api
 {
@@ -13,6 +15,12 @@ namespace Selu383.SP25.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Configure Stripe
+            var stripeSettings = builder.Configuration.GetSection("Stripe");
+            builder.Services.Configure<StripeSettings>(stripeSettings);
+            StripeConfiguration.ApiKey = stripeSettings["SecretKey"];
+
 
             // Add services to the container.
             builder.Services.AddControllers();
