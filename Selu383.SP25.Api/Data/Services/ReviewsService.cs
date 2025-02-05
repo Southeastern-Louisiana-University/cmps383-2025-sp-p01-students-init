@@ -5,6 +5,6 @@ namespace Selu383.SP25.Api.Data.Services
 {
     public class ReviewsService : EntityBaseRepository<Review>, IReviewsService
     {
-        public ReviewsService(ApplicationDbContext context) : base(context) { }
+        public ReviewsService(DataContext context) : base(context) { }
     }
 }

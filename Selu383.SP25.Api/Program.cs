@@ -30,7 +30,7 @@ namespace Selu383.SP25.Api
             builder.Services.AddSwaggerGen();
 
             // SQL Connection
-            builder.Services.AddDbContext<ApplicationDbContext>(Options =>
+            builder.Services.AddDbContext<DataContext>(Options =>
             {
                 Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -49,7 +49,7 @@ namespace Selu383.SP25.Api
                     options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
                     options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
                 })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
             // Service Injections
@@ -78,7 +78,7 @@ namespace Selu383.SP25.Api
             // Ensure database is deleted and recreated
             using (var scope = app.Services.CreateScope())
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
 
                 // Automatic Migration
                 //dbContext.Database.Migrate();

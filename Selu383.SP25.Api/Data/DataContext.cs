@@ -6,9 +6,9 @@ using System.Reflection;
 
 namespace Selu383.SP25.Api
 {
-    public class ApplicationDbContext : IdentityDbContext<User, Role, int>
+    public class DataContext : IdentityDbContext<User, Role, int>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
         }
@@ -21,7 +21,7 @@ namespace Selu383.SP25.Api
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).GetTypeInfo().Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).GetTypeInfo().Assembly);
         }
     }
 }

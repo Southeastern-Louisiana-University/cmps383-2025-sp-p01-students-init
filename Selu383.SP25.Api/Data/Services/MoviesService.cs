@@ -5,6 +5,6 @@ namespace Selu383.SP25.Api.Data.Services
 {
     public class MoviesService : EntityBaseRepository<Movie>, IMoviesService
     {
-        public MoviesService(ApplicationDbContext context) : base(context) { }
+        public MoviesService(DataContext context) : base(context) { }
     }
 }
