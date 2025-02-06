@@ -55,6 +55,7 @@ namespace Selu383.SP25.Api
             // Service Injections
             builder.Services.AddScoped<IMoviesService, MoviesService>();
             builder.Services.AddScoped<IReviewsService, ReviewsService>();
+            builder.Services.AddScoped<ITheatersService, TheatersService>();
 
 
 
