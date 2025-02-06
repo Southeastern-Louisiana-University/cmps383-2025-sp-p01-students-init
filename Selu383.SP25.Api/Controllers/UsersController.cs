@@ -10,10 +10,10 @@ namespace Selu383.SP25.Api.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
 
-        public UsersController(ApplicationDbContext context, UserManager<User> userManager)
+        public UsersController(DataContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;
