@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Selu383.SP25.Api.Dtos;
 using Selu383.SP25.Api.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Selu383.SP25.Api.Controllers;
 
@@ -33,24 +34,23 @@ public class TheatersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-public async Task<ActionResult<TheaterDto>> GetTheater(int id)
-{
-    var theater = await _context.Theaters
-        .Select(t => new TheaterDto
-        {
-            Id = t.Id,
-            Name = t.Name,
-            Address = t.Address,
-            SeatCount = t.SeatCount
-        })
-        .FirstOrDefaultAsync(t => t.Id == id);
-
-    if (theater == null)
+    public async Task<ActionResult<TheaterDto>> GetTheater(int id)
     {
-        return NotFound();
+        var theater = await _context.Theaters
+            .Select(t => new TheaterDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Address = t.Address,
+                SeatCount = t.SeatCount
+            })
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (theater == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(theater);
     }
-
-    return Ok(theater);
 }
-}
-
