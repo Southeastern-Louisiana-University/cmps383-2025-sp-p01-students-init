@@ -6,11 +6,11 @@ namespace Selu383.SP25.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TheaterController : ControllerBase
+    public class TheatersController : ControllerBase
     {
         private readonly ITheatersService _service;
 
-        public TheaterController(ITheatersService service)
+        public TheatersController(ITheatersService service)
         {
             _service = service;
         }
@@ -72,8 +72,6 @@ namespace Selu383.SP25.Api.Controllers
             {
                 return BadRequest("Invalid request data.");
             }
-
-            // Validation for Name, Address, and SeatCount
             if (string.IsNullOrEmpty(theater.Name))
             {
                 return BadRequest("Name is required.");
