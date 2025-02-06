@@ -9,13 +9,12 @@ namespace Selu383.SP25.Api.Seeding
         {
             ArgumentNullException.ThrowIfNull(dbContext, nameof(dbContext));
             dbContext.Database.EnsureCreated();
-            if (dbContext.Hotel.Any()) return;
+            //if (dbContext.Hotel.Any()) return;
 
             var hotels = new Hotel[]
             {
             new Hotel{ Name = "Celeberty" },
-            new Hotel{ Name = "Perkins Rowe" },
-            new Hotel{ Name = "AMC"}
+            new Hotel{ Name = "Perkins Rowe" }
             //add other users
             };
 
@@ -28,8 +27,7 @@ namespace Selu383.SP25.Api.Seeding
 
             var theaters = new Theater[]
             {
-            new Theater{ Name = "Celeberty" },
-            new Theater{ Name = "AMC" }
+            new Theater{ Name = "Movie Tavern", Address = "123 Anywhere St", SeatCount = 21 }
             //add other users
             };
 
