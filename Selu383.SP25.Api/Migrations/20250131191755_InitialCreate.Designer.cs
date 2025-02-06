@@ -11,7 +11,7 @@ using Selu383.SP25.Api;
 
 namespace Selu383.SP25.Api.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20250131191755_InitialCreate")]
     partial class InitialCreate
     {

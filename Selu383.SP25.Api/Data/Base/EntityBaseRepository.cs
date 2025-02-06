@@ -6,8 +6,8 @@ namespace Selu383.SP25.Api.Data.Base
 {
     public class EntityBaseRepository<T> : IEntityBaseRepository<T> where T : class, IEntityBase, new()
     {
-        private readonly ApplicationDbContext _context;
-        public EntityBaseRepository(ApplicationDbContext context)
+        private readonly DataContext _context;
+        public EntityBaseRepository(DataContext context)
         {
             _context = context;
         }

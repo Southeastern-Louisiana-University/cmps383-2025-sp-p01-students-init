@@ -6,20 +6,23 @@ using System.Reflection;
 
 namespace Selu383.SP25.Api
 {
-    public class ApplicationDbContext : IdentityDbContext<User, Role, int>
+    public class DataContext : IdentityDbContext<User, Role, int>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
         }
 
         // Define each entity below
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Theater> Theaters { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).GetTypeInfo().Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).GetTypeInfo().Assembly);
         }
     }
 }
