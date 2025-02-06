@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Selu383.SP25.Api;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Selu383.SP25.Api
 {
@@ -14,9 +16,9 @@ namespace Selu383.SP25.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-            builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(ConnectionString));
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -55,6 +57,11 @@ namespace Selu383.SP25.Api
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void ConnectionString(SqlServerDbContextOptionsBuilder builder)
+        {
+            throw new NotImplementedException();
         }
     }
 }
