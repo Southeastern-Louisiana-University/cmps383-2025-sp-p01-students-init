@@ -24,6 +24,7 @@ namespace Selu383.SP25.Api.Data
         }
 
         public DbSet<Hotel> Hotel { get; set; }
+        public DbSet<Theater> Theater { get; set; }
                
     }
 
