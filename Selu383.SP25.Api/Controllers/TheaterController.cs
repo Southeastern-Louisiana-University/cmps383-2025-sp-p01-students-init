@@ -28,56 +28,87 @@ namespace Selu383.SP25.Api.Controllers
                     SeatCount = Theater.SeatCount
                 }).ToList();
 
-            return Ok("Test");
+            return Ok(data); 
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var data = _dataContext
-                  .Set<Theater>()
-                  .Select(Theater => new TheaterGetDto
-                  {
-                      Id = Theater.Id,
-                      Name = Theater.Name,
-                      Address = Theater.Address,
-                      SeatCount = Theater.SeatCount
-                  }).ToList();
+                .Set<Theater>()
+                .Where(Theater => Theater.Id == id)
+                .Select(Theater => new TheaterGetDto
+                {
+                    Id = Theater.Id,
+                    Name = Theater.Name,
+                    Address = Theater.Address,
+                    SeatCount = Theater.SeatCount
+                }).FirstOrDefault();
 
-            return Ok("Test");
+            if (data == null)
+            {
+                return NotFound();  
+            }
+
+            return Ok(data);  
+        }
+        
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            
+            var theater = _dataContext.Set<Theater>().FirstOrDefault(t => t.Id == id);
+
+            
+            if (theater == null)
+            {
+                return NotFound(); 
+            }
+
+            
+            _dataContext.Set<Theater>().Remove(theater);
+            _dataContext.SaveChanges(); 
+
+            
+            return NoContent(); 
         }
 
         [HttpPost]
         public IActionResult CreateTheater([FromBody] TheaterCreateDto createDto)
         {
-
-            if (createDto.Name.Length > 120 )
-            {
-                return BadRequest("Name is too long");
-            }
-            if (createDto.Name == "")
+            
+            if (string.IsNullOrEmpty(createDto.Name))
             {
                 return BadRequest("Name cannot be empty");
             }
-            var TheaterToCreate = new Theater
+            if (createDto.Name.Length > 120)
+            {
+                return BadRequest("Name is too long");
+            }
+
+            
+            var theaterToCreate = new Theater
             {
                 Name = createDto.Name,
                 Address = createDto.Address,
                 SeatCount = createDto.SeatCount
-
             };
 
+            
+            _dataContext.Set<Theater>().Add(theaterToCreate);
             _dataContext.SaveChanges();
 
-            var TheaterReturn = new TheaterGetDto
+            
+            var theaterReturn = new TheaterGetDto
             {
-                Id = TheaterToCreate.Id,
-                Name = TheaterToCreate.Name,
-                Address = TheaterToCreate.Address,
-                SeatCount = TheaterToCreate.SeatCount
+                Id = theaterToCreate.Id,
+                Name = theaterToCreate.Name,
+                Address = theaterToCreate.Address,
+                SeatCount = theaterToCreate.SeatCount
             };
 
-            return Ok("Ok");
+            
+            return CreatedAtAction(nameof(GetById), new { id = theaterToCreate.Id }, theaterReturn);
         }
 
     }

@@ -268,9 +268,8 @@ public class TheatersControllerTests
         //assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.NotFound, "we expect an HTTP 404 when calling DELETE /api/theaters/{id} with an invalid Id");
     }
-
     [TestMethod]
-    public async Task DeleteTheater_ValidItem_ReturnsOk()
+    public async Task DeleteTheater_ValidItem_ReturnsNoContent()
     {
         //arrange
         var webClient = context.GetStandardWebClient();
@@ -290,7 +289,7 @@ public class TheatersControllerTests
         var httpResponse = await webClient.DeleteAsync($"/api/theaters/{request.Id}");
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK, "we expect an HTTP 200 when calling DELETE /api/theaters/{id} with a valid id");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.NoContent, "we expect an HTTP 204 when calling DELETE /api/theaters/{id} with a valid id");
     }
 
     [TestMethod]
