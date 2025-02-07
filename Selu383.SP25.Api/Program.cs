@@ -17,11 +17,11 @@ namespace Selu383.SP25.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<ApplicationDbContext>(options=> options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections") ));
+            builder.Services.AddDbContext<DataContext>(options=> options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections") ));
             builder.Services.AddEndpointsApiExplorer();
             // This service is for Automapper
             builder.Services.AddAutoMapper(typeof(Program));
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections")));
             // This service is for Swagger UI
             builder.Services.AddSwaggerGen(options =>

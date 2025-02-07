@@ -9,18 +9,18 @@ namespace Selu383.SP25.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TheatreController : ControllerBase
+    public class TheatersController : ControllerBase
     {
-        static private List<Theatre> Theatres = new List<Theatre>
+        static private List<Theaters> Theatres = new List<Theaters>
         {
-            new Theatre
+            new Theaters
             {
                 Id = 1,
                 Address = "Laffayete",
                 Name = "AMC",
                 SeatCount = 29
             },
-            new Theatre {
+            new Theaters {
                 Id = 2,
                 Address = "New York",
                 Name = "Wholesome",
@@ -28,22 +28,22 @@ namespace Selu383.SP25.Api.Controllers
             },
         };
         private readonly IMapper _mapper;
-        private readonly ApplicationDbContext _dataContext;
-        public TheatreController(IMapper mapper, ApplicationDbContext dataContext)
+        private readonly DataContext _dataContext;
+        public TheatersController(IMapper mapper, DataContext dataContext)
         {
             _mapper = mapper;
             _dataContext = dataContext;
         }
 
         [HttpGet]
-        public ActionResult<List<Theatre>> GetTheatres()
+        public ActionResult<List<Theaters>> GetTheatres()
         {
             var theatre = _dataContext.Theatres.ToList();
             var theatreDto = _mapper.Map<List<TheatreDto>>(theatre);
             return Ok(theatreDto);
         }
         [HttpGet("{id}")]
-        public ActionResult<Theatre>GetTheatreById(int id)
+        public ActionResult<Theaters>GetTheatreById(int id)
         {
             var theatre = _dataContext.Theatres.FirstOrDefault(x => x.Id == id);
             if(theatre is null)
@@ -55,13 +55,13 @@ namespace Selu383.SP25.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Theatre> AddTheatre(TheatreCreateDto newTheatreDto)
+        public ActionResult<Theaters> AddTheatre(TheatreCreateDto newTheatreDto)
         {
-            if (newTheatreDto is null)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-           var newTheatre = _mapper.Map<Theatre>(newTheatreDto);
+           var newTheatre = _mapper.Map<Theaters>(newTheatreDto);
             _dataContext.Theatres.Add(newTheatre);
             _dataContext.SaveChanges();
             var theatreDto = _mapper.Map<TheatreDto>(newTheatre);

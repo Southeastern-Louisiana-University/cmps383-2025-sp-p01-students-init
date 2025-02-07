@@ -3,9 +3,9 @@ using Selu383.SP25.Api.Entities;
 
 namespace Selu383.SP25.Api.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class DataContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             // Theatre tables
 
@@ -14,13 +14,13 @@ namespace Selu383.SP25.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Theatre>().HasData(
-                new Theatre { Id = 1, Name = "vatte ko Hall", Address = "Hammond", SeatCount = 34 },
-                new Theatre { Id = 2, Name = "aakashHall", Address = "BatonRouge", SeatCount = 23}
+            modelBuilder.Entity<Theaters>().HasData(
+                new Theaters { Id = 1, Name = "vatte ko Hall", Address = "Hammond", SeatCount = 34 },
+                new Theaters { Id = 2, Name = "aakashHall", Address = "BatonRouge", SeatCount = 23}
                 );
 
 
         }
-        public DbSet<Theatre> Theatres { get; set; }
+        public DbSet<Theaters> Theatres { get; set; }
     }
 }
