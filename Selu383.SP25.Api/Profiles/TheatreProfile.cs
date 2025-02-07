@@ -8,9 +8,9 @@ namespace Selu383.SP25.Api.Profiles
     {
         public TheatreProfile()
         {
-            CreateMap<Theatre, TheatreDto>();
-            CreateMap<TheatreCreateDto, Theatre>();
-            CreateMap<TheatreUpdateDto, Theatre>();
+            CreateMap<Theaters, TheatreDto>();
+            CreateMap<TheatreCreateDto, Theaters>();
+            CreateMap<TheatreUpdateDto, Theaters>();
             
         }
 
