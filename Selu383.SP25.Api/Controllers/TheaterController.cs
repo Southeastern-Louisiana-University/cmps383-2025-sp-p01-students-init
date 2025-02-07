@@ -2,6 +2,7 @@
 using Selu383.SP25.Api.Data;
 using System.Diagnostics.Eventing.Reader;
 using Selu383.SP25.Api.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Selu383.SP25.Api.Controllers
 {
@@ -70,7 +71,7 @@ namespace Selu383.SP25.Api.Controllers
             _dataContext.SaveChanges(); 
 
             
-            return NoContent(); 
+            return Ok(); 
         }
 
         [HttpPost]
@@ -84,6 +85,10 @@ namespace Selu383.SP25.Api.Controllers
             if (createDto.Name.Length > 120)
             {
                 return BadRequest("Name is too long");
+            }
+            if (string.IsNullOrEmpty(createDto.Address))
+            {
+                return BadRequest("Address cannot be empty");
             }
 
             
@@ -110,6 +115,44 @@ namespace Selu383.SP25.Api.Controllers
             
             return CreatedAtAction(nameof(GetById), new { id = theaterToCreate.Id }, theaterReturn);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateTheater([FromBody] TheaterUpdateDto updateDto, int id)
+        {
+            var TheaterToUpdate = _dataContext.Set<Theater>()
+                .FirstOrDefault(Theater => Theater.Id == id);
+
+            if (string.IsNullOrEmpty(updateDto.Name))
+            {
+                return BadRequest("Name cannot be empty");
+            }
+            if (updateDto.Name.Length > 120)
+            {
+                return BadRequest("Name is too long");
+            }
+            if (string.IsNullOrEmpty(updateDto.Address))
+            {
+                return BadRequest("Address cannot be empty");
+            }
+
+            TheaterToUpdate.Name = updateDto.Name;
+            TheaterToUpdate.Address = updateDto.Address;
+            TheaterToUpdate.SeatCount = updateDto.SeatCount;
+
+            _dataContext.SaveChanges();
+
+            var TheaterReturn = new TheaterGetDto
+            {
+                Id = TheaterToUpdate.Id,
+                Name = TheaterToUpdate.Name,
+                Address = TheaterToUpdate.Address,
+                SeatCount = TheaterToUpdate.SeatCount
+            };
+
+            return Ok(TheaterReturn);
+
+        }
+
 
     }
 }
