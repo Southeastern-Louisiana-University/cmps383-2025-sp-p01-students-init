@@ -53,7 +53,7 @@ public class TheatersController : ControllerBase
     public async Task<ActionResult<TheaterDto>> CreateTheater(TheaterDto dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Name) || dto.Name.Length > 120 ||
-            string.IsNullOrWhiteSpace(dto.Address) || dto.SeatCount < 1)
+            string.IsNullOrWhiteSpace(dto.Address))
         {
             return BadRequest();
         }
@@ -72,6 +72,8 @@ public class TheatersController : ControllerBase
         await _context.SaveChangesAsync();
 
         dto.Id = theater.Id;
+
+
 
 
         return CreatedAtAction(nameof(GetTheater), new { id = theater.Id }, dto);
