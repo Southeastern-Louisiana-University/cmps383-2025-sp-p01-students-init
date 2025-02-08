@@ -7,7 +7,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace Selu383.SP25.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/theaters")]
 public class TheatersController : ControllerBase
 {
     private readonly DataContext _context;
@@ -52,5 +52,34 @@ public class TheatersController : ControllerBase
         }
 
         return Ok(theater);
+    }
+    [HttpPost]
+    public async Task<ActionResult<TheaterDto>> CreateTheater(TheaterDto dto)
+    {
+
+        if (string.IsNullOrWhiteSpace(dto.Name))
+            return BadRequest();
+
+        if (dto.Name.Length > 120)
+            return BadRequest();
+
+        if (string.IsNullOrWhiteSpace(dto.Address))
+            return BadRequest();
+
+
+        var theater = new Theater
+        {
+            Name = dto.Name,
+            Address = dto.Address,
+            SeatCount = dto.SeatCount
+        };
+
+        _context.Theaters.Add(theater);
+        await _context.SaveChangesAsync();
+
+       
+        dto.Id = theater.Id; 
+
+        return CreatedAtAction(nameof(GetTheater), new { id = theater.Id }, dto);
     }
 }
