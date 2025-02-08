@@ -1,3 +1,4 @@
+using Azure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Selu383.SP25.Api.Dtos;
@@ -53,4 +54,46 @@ public class TheatersController : ControllerBase
 
         return Ok(theater);
     }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<TheaterDto>> Update(TheaterDto theaterUpdate, int id)
+    {
+        var theaterToUpdate = await _context.Set<Theater>().FirstOrDefaultAsync(t => t.Id == id);
+
+        if (theaterToUpdate == null)
+        {
+            return NotFound();
+        }
+
+        if (string.IsNullOrEmpty(theaterToUpdate.Name))
+        {
+            return BadRequest(404);
+        }
+
+        if (string.IsNullOrEmpty(theaterToUpdate.Address)) 
+        {
+            return BadRequest(404);
+        }
+
+        if(theaterUpdate.Name.Length <= 120)
+        {
+            theaterToUpdate.Name = theaterUpdate.Name;
+        }
+        theaterToUpdate.Address = theaterUpdate.Address;
+
+        _context.SaveChanges();
+
+        var theaterToReturn = new TheaterDto
+        {
+            Id = theaterToUpdate.Id,
+            Name = theaterToUpdate.Name,
+            Address = theaterToUpdate.Address,
+        };
+
+        return Ok(theaterToUpdate);
+
+    }
+
+   
+
 }
