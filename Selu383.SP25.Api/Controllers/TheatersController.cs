@@ -55,6 +55,49 @@ public class TheatersController : ControllerBase
         return Ok(theater);
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     [HttpPut("{id}")]
     public async Task<ActionResult<TheaterDto>> Update(TheaterDto theaterUpdate, int id)
     {
@@ -67,12 +110,12 @@ public class TheatersController : ControllerBase
 
         if (string.IsNullOrEmpty(theaterToUpdate.Name))
         {
-            return BadRequest(404);
+            return BadRequest();
         }
 
         if (string.IsNullOrEmpty(theaterToUpdate.Address)) 
         {
-            return BadRequest(404);
+            return BadRequest();
         }
 
         if(theaterUpdate.Name.Length <= 120)
