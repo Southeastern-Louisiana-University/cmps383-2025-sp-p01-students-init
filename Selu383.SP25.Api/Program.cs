@@ -1,12 +1,10 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using Selu383.SP25.Api;
 using Microsoft.EntityFrameworkCore;
 using Selu383.SP25.Api.Data;
-using Selu383.SP25.Api.Entities;
 using Selu383.SP25.Api.Seeding;
+using Microsoft.OpenApi.Models;
 
 namespace Selu383.SP25.Api
 {
@@ -18,23 +16,27 @@ namespace Selu383.SP25.Api
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddOpenApi();
-            builder.Services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("TheaterDB")));
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CMPS 383 API", Version = "v1" });
+            });
+
+            var connectionString = builder.Configuration.GetConnectionString("TheaterDB");
+            builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddScoped<DbInitializer>();
 
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
-                app.MapControllers();
-                app.UseItToSeedSqlServer();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CMPS 383 API v1"));
             }
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
+
             app.Run();
         }
     }

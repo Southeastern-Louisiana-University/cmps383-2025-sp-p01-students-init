@@ -13,8 +13,7 @@ namespace Selu383.SP25.Api.Data
             Configuration = configuration;
         }
 
-        // ✅ This is required to allow queries like `_dataContext.Set<Theater>()`
-        public DbSet<Theater> Theaters { get; set; }  
+        public DbSet<Theater> Theaters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
