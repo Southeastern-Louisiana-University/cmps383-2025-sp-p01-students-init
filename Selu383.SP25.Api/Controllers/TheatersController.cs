@@ -8,7 +8,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace Selu383.SP25.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/theaters")]
 public class TheatersController : ControllerBase
 {
     private readonly DataContext _context;
@@ -54,89 +54,33 @@ public class TheatersController : ControllerBase
 
         return Ok(theater);
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    [HttpPut("{id}")]
-    public async Task<ActionResult<TheaterDto>> Update(TheaterDto theaterUpdate, int id)
+    [HttpPost]
+    public async Task<ActionResult<TheaterDto>> CreateTheater(TheaterDto dto)
     {
-        var theaterToUpdate = await _context.Set<Theater>().FirstOrDefaultAsync(t => t.Id == id);
 
-        if (theaterToUpdate == null)
-        {
-            return NotFound();
-        }
-
-        if (string.IsNullOrEmpty(theaterToUpdate.Name))
-        {
+        if (string.IsNullOrWhiteSpace(dto.Name))
             return BadRequest();
-        }
 
-        if (string.IsNullOrEmpty(theaterToUpdate.Address)) 
-        {
+        if (dto.Name.Length > 120)
             return BadRequest();
-        }
 
-        if(theaterUpdate.Name.Length <= 120)
+        if (string.IsNullOrWhiteSpace(dto.Address))
+            return BadRequest();
+
+
+        var theater = new Theater
         {
-            theaterToUpdate.Name = theaterUpdate.Name;
-        }
-        theaterToUpdate.Address = theaterUpdate.Address;
-
-        _context.SaveChanges();
-
-        var theaterToReturn = new TheaterDto
-        {
-            Id = theaterToUpdate.Id,
-            Name = theaterToUpdate.Name,
-            Address = theaterToUpdate.Address,
+            Name = dto.Name,
+            Address = dto.Address,
+            SeatCount = dto.SeatCount
         };
 
-        return Ok(theaterToUpdate);
+        _context.Theaters.Add(theater);
+        await _context.SaveChangesAsync();
 
+       
+        dto.Id = theater.Id; 
+
+        return CreatedAtAction(nameof(GetTheater), new { id = theater.Id }, dto);
     }
-
-   
-
 }
