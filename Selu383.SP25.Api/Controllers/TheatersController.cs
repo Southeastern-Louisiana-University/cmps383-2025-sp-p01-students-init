@@ -58,29 +58,18 @@ public class TheatersController : ControllerBase
             return BadRequest();
         }
 
-       
-
         var theater = new Theater
         {
             Name = dto.Name,
             Address = dto.Address,
             SeatCount = dto.SeatCount
         };
-        
-
-        
-
+    
         _context.Theaters.Add(theater);
         await _context.SaveChangesAsync();
 
         dto.Id = theater.Id;
-
-
-
-
         return CreatedAtAction(nameof(GetTheater), new { id = theater.Id }, dto);
-
-
     }
 
     [HttpPut("{id}")]
