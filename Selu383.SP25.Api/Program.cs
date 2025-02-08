@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Selu383.SP25.Api.Data;
 
 namespace Selu383.SP25.Api
 {
@@ -7,24 +9,28 @@ namespace Selu383.SP25.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
+            // Add services to the container
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+
+            // Register DataContext with dependency injection
+            builder.Services.AddDbContext<DataContext>(options =>
+                options.UseInMemoryDatabase("TestDatabase")); // In-memory database for development/testing
+
+            // Add OpenAPI/Swagger support
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
 
             app.MapControllers();
 
