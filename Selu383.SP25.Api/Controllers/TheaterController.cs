@@ -1,36 +1,150 @@
-using System:
+using Microsoft.AspNetCore.Mvc;
+using Selu383.SP25.Api.Data;
+using Selu383.SP25.Api.Entities;  
+using Selu383.SP25.Api.DTOs;      
 
-public class Theater
+namespace Selu383.SP25.Api.Controllers
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public int SeatCount { get; set; }
+    [ApiController]
+    [Route("/api/theaters")]
+    public class TheaterController : ControllerBase
+    {
+        private readonly DataContext _dataContext;
+        public TheaterController(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
 
-}
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var data = _dataContext
+                .Set<Theater>()
+                .Select(Theater => new Selu383.SP25.Api.DTOs.TheaterGetDto
+                {
+                    Id = Theater.Id,
+                    Name = Theater.Name,
+                    Address = Theater.Address,
+                    SeatCount = Theater.SeatCount
+                }).ToList();
 
-public class TheaterGetDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public int SeatCount { get; set; }
+            return Ok(data); 
+        }
 
-}
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var data = _dataContext
+                .Set<Theater>()
+                .Where(Theater => Theater.Id == id)
+                .Select(Theater => new Selu383.SP25.Api.DTOs.TheaterGetDto
+                {
+                    Id = Theater.Id,
+                    Name = Theater.Name,
+                    Address = Theater.Address,
+                    SeatCount = Theater.SeatCount
+                }).FirstOrDefault();
 
-public class TheaterCreateDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public int SeatCount { get; set; }
+            if (data == null)
+            {
+                return NotFound();  
+            }
 
-}
+            return Ok(data);  
+        }
 
-public class TheaterUpdateDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public int SeatCount { get; set; }
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var theater = _dataContext.Set<Theater>().FirstOrDefault(t => t.Id == id);
+
+            if (theater == null)
+            {
+                return NotFound(); 
+            }
+
+            _dataContext.Set<Theater>().Remove(theater);
+            _dataContext.SaveChanges(); 
+
+            return Ok(); 
+        }
+
+        [HttpPost]
+        public IActionResult CreateTheater([FromBody] Selu383.SP25.Api.DTOs.TheaterCreateDto createDto)
+        {
+            if (string.IsNullOrEmpty(createDto.Name))
+            {
+                return BadRequest("Name cannot be empty");
+            }
+            if (createDto.Name.Length > 120)
+            {
+                return BadRequest("Name is too long");
+            }
+            if (string.IsNullOrEmpty(createDto.Address))
+            {
+                return BadRequest("Address cannot be empty");
+            }
+
+            var theaterToCreate = new Theater
+            {
+                Name = createDto.Name,
+                Address = createDto.Address,
+                SeatCount = createDto.SeatCount
+            };
+
+            _dataContext.Set<Theater>().Add(theaterToCreate);
+            _dataContext.SaveChanges();
+
+            var theaterReturn = new Selu383.SP25.Api.DTOs.TheaterGetDto
+            {
+                Id = theaterToCreate.Id,
+                Name = theaterToCreate.Name,
+                Address = theaterToCreate.Address,
+                SeatCount = theaterToCreate.SeatCount
+            };
+
+            return CreatedAtAction(nameof(GetById), new { id = theaterToCreate.Id }, theaterReturn);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateTheater([FromBody] Selu383.SP25.Api.DTOs.TheaterUpdateDto updateDto, int id)
+        {
+            var TheaterToUpdate = _dataContext.Set<Theater>()
+                .FirstOrDefault(Theater => Theater.Id == id);
+
+            if (TheaterToUpdate == null)
+            {
+                return NotFound("Theater not found.");  // Prevents null reference issues
+            }
+
+            if (string.IsNullOrEmpty(updateDto.Name))
+            {
+                return BadRequest("Name cannot be empty");
+            }
+            if (updateDto.Name.Length > 120)
+            {
+                return BadRequest("Name is too long");
+            }
+            if (string.IsNullOrEmpty(updateDto.Address))
+            {
+                return BadRequest("Address cannot be empty");
+            }
+
+            TheaterToUpdate.Name = updateDto.Name;
+            TheaterToUpdate.Address = updateDto.Address;
+            TheaterToUpdate.SeatCount = updateDto.SeatCount;
+
+            _dataContext.SaveChanges();
+
+            var TheaterReturn = new Selu383.SP25.Api.DTOs.TheaterGetDto
+            {
+                Id = TheaterToUpdate.Id,
+                Name = TheaterToUpdate.Name,
+                Address = TheaterToUpdate.Address,
+                SeatCount = TheaterToUpdate.SeatCount
+            };
+
+            return Ok(TheaterReturn);
+        }
+    }
 }

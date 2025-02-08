@@ -6,13 +6,13 @@ namespace Selu383.SP25.Api.Seeding
     {
         public static IApplicationBuilder UseItToSeedSqlServer(this IApplicationBuilder app)
         {
-            ArgumentNullException.ThroeIfNull(app, nameof(app));
+            ArgumentNullException.ThrowIfNull(app, nameof(app));
 
             using var scope = app.ApplicationServices.CreateScope();
             var services = scope.ServiceProvider;
             try
             {
-                var context = services.GetRequiredServices<DataContext>();
+                var context = services.GetRequiredService<DataContext>();
                 DbInitializer.Initialize(context);
             }
             catch (Exception ex)
