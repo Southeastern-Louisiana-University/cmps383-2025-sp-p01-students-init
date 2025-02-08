@@ -53,7 +53,7 @@ public class TheatersController : ControllerBase
     public async Task<ActionResult<TheaterDto>> CreateTheater(TheaterDto dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Name) || dto.Name.Length > 120 ||
-            string.IsNullOrWhiteSpace(dto.Address) || dto.SeatCount >= 1)
+            string.IsNullOrWhiteSpace(dto.Address) || dto.SeatCount <= 1)
         {
             return BadRequest();
         }
