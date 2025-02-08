@@ -38,13 +38,15 @@ public class TheatersController : ControllerBase
             return NotFound();
         }
 
-        return new TheaterDto
+        var dto = new TheaterDto
         {
             Id = theater.Id,
             Name = theater.Name,
             Address = theater.Address,
             SeatCount = theater.SeatCount
         };
+
+        return dto;
     }
 
     [HttpPost]
@@ -55,6 +57,7 @@ public class TheatersController : ControllerBase
         {
             return BadRequest();
         }
+        
 
         var theater = new Theater
         {
@@ -63,11 +66,17 @@ public class TheatersController : ControllerBase
             SeatCount = dto.SeatCount
         };
 
+        
+
         _context.Theaters.Add(theater);
         await _context.SaveChangesAsync();
 
         dto.Id = theater.Id;
+
+
         return CreatedAtAction(nameof(GetTheater), new { id = theater.Id }, dto);
+
+
     }
 
     [HttpPut("{id}")]
