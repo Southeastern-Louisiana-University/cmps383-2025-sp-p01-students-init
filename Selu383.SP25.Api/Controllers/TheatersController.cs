@@ -83,4 +83,55 @@ public class TheatersController : ControllerBase
 
         return CreatedAtAction(nameof(GetTheater), new { id = theater.Id }, dto);
     }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<TheaterDto>> UpdateTheater(TheaterDto theaterUpdate, int id)
+    {
+        var theaterToUpdate = await _context.Theaters.FirstOrDefaultAsync(t => t.Id == id);
+
+
+        if (theaterToUpdate == null)
+        {
+            return NotFound();
+        }
+
+        if (string.IsNullOrEmpty(theaterUpdate.Name))
+        {
+            return BadRequest("Name is required");
+        }
+
+        if (string.IsNullOrEmpty(theaterUpdate.Address))
+        {
+            return BadRequest("Address is required");
+        }
+
+        if (theaterUpdate.Name.Length > 120)
+        {
+            return BadRequest("Name can not exceed 120 characters");
+        }
+
+        //theaterToUpdate.Id = id;
+        theaterToUpdate.Name = theaterUpdate.Name;
+        theaterToUpdate.Address = theaterUpdate.Address;
+        theaterToUpdate.SeatCount = theaterUpdate.SeatCount;
+
+        await _context.SaveChangesAsync();
+
+        var theaterToReturn = new TheaterDto
+        {
+            Id = theaterToUpdate.Id,
+            Name = theaterToUpdate.Name,
+            Address = theaterToUpdate.Address,
+        };
+
+        return Ok(new TheaterDto
+        {
+            Id = theaterToUpdate.Id,
+            Name = theaterToUpdate.Name,
+            Address = theaterToUpdate.Address,
+            SeatCount = theaterToUpdate.SeatCount,
+        });
+    }
+
+        
 }
