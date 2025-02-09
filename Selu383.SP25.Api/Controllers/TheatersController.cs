@@ -87,7 +87,7 @@ public class TheatersController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<TheaterDto>> UpdateTheater(TheaterDto theaterUpdate, int id)
     {
-        var theaterToUpdate = await _context.Theaters.FirstOrDefaultAsync(t => t.Id == id);
+        var theaterToUpdate = await _context.Theaters.FindAsync(id);
 
 
         if (theaterToUpdate == null)
@@ -95,12 +95,12 @@ public class TheatersController : ControllerBase
             return NotFound();
         }
 
-        if (string.IsNullOrEmpty(theaterUpdate.Name))
+        if (string.IsNullOrWhiteSpace(theaterUpdate.Name))
         {
             return BadRequest("Name is required");
         }
 
-        if (string.IsNullOrEmpty(theaterUpdate.Address))
+        if (string.IsNullOrWhiteSpace(theaterUpdate.Address))
         {
             return BadRequest("Address is required");
         }
@@ -110,7 +110,6 @@ public class TheatersController : ControllerBase
             return BadRequest("Name can not exceed 120 characters");
         }
 
-        //theaterToUpdate.Id = id;
         theaterToUpdate.Name = theaterUpdate.Name;
         theaterToUpdate.Address = theaterUpdate.Address;
         theaterToUpdate.SeatCount = theaterUpdate.SeatCount;
@@ -124,13 +123,7 @@ public class TheatersController : ControllerBase
             Address = theaterToUpdate.Address,
         };
 
-        return Ok(new TheaterDto
-        {
-            Id = theaterToUpdate.Id,
-            Name = theaterToUpdate.Name,
-            Address = theaterToUpdate.Address,
-            SeatCount = theaterToUpdate.SeatCount,
-        });
+        return Ok(theaterToReturn);
     }
 
         
