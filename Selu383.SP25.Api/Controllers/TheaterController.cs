@@ -90,6 +90,10 @@ namespace Selu383.SP25.Api.Controllers
             {
                 return BadRequest("Address cannot be empty");
             }
+            if (createDto.SeatCount < 1)
+            {
+                return BadRequest("Theater must have at least one seat");
+            }
 
             
             var theaterToCreate = new Theater
