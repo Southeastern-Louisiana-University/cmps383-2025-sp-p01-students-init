@@ -1,4 +1,13 @@
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
+using Selu383.SP25.Api.Data;
+using System.Reflection;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.OpenApi.Models;
+
 namespace Selu383.SP25.Api
 {
     public class Program
@@ -8,6 +17,23 @@ namespace Selu383.SP25.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<DataContext>(options=> options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections") ));
+            builder.Services.AddEndpointsApiExplorer();
+            // This service is for Automapper
+            builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections")));
+            // This service is for Swagger UI
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Theatre API",
+                    Version = "v1",
+                    Description = "API for managing theatres"
+                });
+            });
+
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -19,7 +45,15 @@ namespace Selu383.SP25.Api
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.UseSwagger();
+                
             }
+            app.UseSwaggerUI(options =>
+            {
+                // The Swagger UI will be available at the following endpoint
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Theatre API v1");
+                options.RoutePrefix = string.Empty; // Set Swagger UI to the root
+            });
 
             app.UseHttpsRedirection();
 
