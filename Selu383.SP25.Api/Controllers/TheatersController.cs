@@ -125,6 +125,21 @@ public class TheatersController : ControllerBase
 
         return Ok(theaterToReturn);
     }
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteTheater(int id)
+    {
+        var theater = await _context.Theaters.FindAsync(id);
 
-        
+        if (theater == null)
+        {
+            return NotFound();
+        }
+
+        _context.Theaters.Remove(theater);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+
 }
