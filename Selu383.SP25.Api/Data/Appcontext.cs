@@ -14,13 +14,13 @@ namespace Selu383.SP25.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Theaters>().HasData(
-                new Theaters { Id = 1, Name = "vatte ko Hall", Address = "Hammond", SeatCount = 34 },
-                new Theaters { Id = 2, Name = "aakashHall", Address = "BatonRouge", SeatCount = 23}
+            modelBuilder.Entity<Theater>().HasData(
+                new Theater { Id = 1, Name = "vatte ko Hall", Address = "Hammond", SeatCount = 34 },
+                new Theater { Id = 2, Name = "aakashHall", Address = "BatonRouge", SeatCount = 23}
                 );
 
 
         }
-        public DbSet<Theaters> Theatres { get; set; }
+        public DbSet<Theater> Theatres { get; set; }
     }
 }
