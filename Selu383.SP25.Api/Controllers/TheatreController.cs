@@ -7,20 +7,20 @@ using AutoMapper;
 
 namespace Selu383.SP25.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/theaters")]
     [ApiController]
     public class TheatersController : ControllerBase
     {
-        static private List<Theaters> Theatres = new List<Theaters>
+        static private List<Theater> Theatres = new List<Theater>
         {
-            new Theaters
+            new Theater
             {
                 Id = 1,
                 Address = "Laffayete",
                 Name = "AMC",
                 SeatCount = 29
             },
-            new Theaters {
+            new Theater {
                 Id = 2,
                 Address = "New York",
                 Name = "Wholesome",
@@ -36,40 +36,56 @@ namespace Selu383.SP25.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Theaters>> GetTheatres()
+        public ActionResult<List<Theater>> GetTheatres()
         {
             var theatre = _dataContext.Theatres.ToList();
-            var theatreDto = _mapper.Map<List<TheatreDto>>(theatre);
+            var theatreDto = _mapper.Map<List<TheaterDto>>(theatre);
             return Ok(theatreDto);
         }
         [HttpGet("{id}")]
-        public ActionResult<Theaters>GetTheatreById(int id)
+        public ActionResult<Theater>GetTheatreById(int id)
         {
             var theatre = _dataContext.Theatres.FirstOrDefault(x => x.Id == id);
             if(theatre is null)
             {
                 return NotFound();
             }
-            var theatreDto = _mapper.Map<TheatreDto>(theatre);
+            var theatreDto = _mapper.Map<TheaterDto>(theatre);
             return Ok(theatreDto);
         }
 
         [HttpPost]
-        public ActionResult<Theaters> AddTheatre(TheatreCreateDto newTheatreDto)
+        public ActionResult<Theater> AddTheatre(TheaterCreateDto newTheatreDto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest();
+                if (!ModelState.IsValid)
+                {
+                    Console.WriteLine("ModelState is invalid:");
+                    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                }
+
+                var newTheatre = _mapper.Map<Theater>(newTheatreDto);
+                _dataContext.Theatres.Add(newTheatre);
+                _dataContext.SaveChanges();
+                var theatreDto = _mapper.Map<TheaterDto>(newTheatre);
+                return CreatedAtAction(nameof(GetTheatreById), new { id = theatreDto.Id }, theatreDto);
             }
-           var newTheatre = _mapper.Map<Theaters>(newTheatreDto);
-            _dataContext.Theatres.Add(newTheatre);
-            _dataContext.SaveChanges();
-            var theatreDto = _mapper.Map<TheatreDto>(newTheatre);
-            return CreatedAtAction(nameof(GetTheatreById), new { id = theatreDto.Id }, theatreDto);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return NotFound(ex.Message);
+
+            }
 
         }
+
+
         [HttpPut("{id}")]
-        public IActionResult UpdateTheatre(int id, TheatreUpdateDto updateTheatreDto)
+        public IActionResult UpdateTheatre(int id, TheaterUpdateDto updateTheatreDto)
         {
             var existingTheatre = _dataContext.Theatres.FirstOrDefault(x => x.Id == id);
 
@@ -81,7 +97,7 @@ namespace Selu383.SP25.Api.Controllers
             _mapper.Map(updateTheatreDto, existingTheatre);
             _dataContext.SaveChanges();
 
-            return NoContent();
+            return Ok(existingTheatre);
         }
 
         [HttpDelete("{id}")]
@@ -90,11 +106,11 @@ namespace Selu383.SP25.Api.Controllers
             var theatre = _dataContext.Theatres.FirstOrDefault(x =>x.Id == id);
             if (theatre is null)
             {
-                return BadRequest();
+                return NotFound();
             }
            _dataContext.Theatres.Remove(theatre);
            _dataContext.SaveChanges();
-            return NoContent();
+            return Ok();
         }
         
     }
