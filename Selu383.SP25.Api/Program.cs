@@ -74,7 +74,7 @@ namespace Selu383.SP25.Api
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-                await dbContext.Database.MigrateAsync();
+                //await dbContext.Database.MigrateAsync();
                 await TheaterSeeder.Initialize(dbContext);
             }
 
