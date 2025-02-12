@@ -37,18 +37,7 @@ namespace Selu383.SP25.Api.Controllers
             {
                 return BadRequest("Theater data is required.");
             }
-            if (string.IsNullOrEmpty(theater.Name))
-            {
-                return BadRequest("Name is required.");
-            }
-            if (theater.Name.Length > 120)
-            {
-                return BadRequest("Name cannot be longer than 120 characters.");
-            }
-            if (string.IsNullOrEmpty(theater.Address))
-            {
-                return BadRequest("Address is required.");
-            }
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -64,11 +53,6 @@ namespace Selu383.SP25.Api.Controllers
             if (theater == null || id != theater.Id)
             {
                 return BadRequest("Invalid request data.");
-            }
-
-            if (theater.Name.Length > 120)
-            {
-                return BadRequest();
             }
 
             if (!ModelState.IsValid)
