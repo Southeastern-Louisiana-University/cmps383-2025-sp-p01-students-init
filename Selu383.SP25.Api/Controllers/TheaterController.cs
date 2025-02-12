@@ -56,20 +56,33 @@ namespace Selu383.SP25.Api.Controllers
             return Ok(theater);
         }
 
-        // ✅ CREATE A NEW THEATER
+        // ✅ CREATE A NEW THEATER (WITH FIXED VALIDATION FOR SEATCOUNT)
         [HttpPost]
         public IActionResult CreateTheater([FromBody] TheaterCreateDto createDto)
         {
+            var errors = new List<string>();
+
             // Validate Name
             if (string.IsNullOrWhiteSpace(createDto.Name) || createDto.Name.Length > 120)
             {
-                return BadRequest(new { message = "Name must be between 1 and 120 characters." });
+                errors.Add("Name must be between 1 and 120 characters.");
             }
 
             // Validate Address
             if (string.IsNullOrWhiteSpace(createDto.Address))
             {
-                return BadRequest(new { message = "Address cannot be empty." });
+                errors.Add("Address cannot be empty.");
+            }
+
+            // ✅ Validate SeatCount
+            if (createDto.SeatCount == null || createDto.SeatCount <= 0)
+            {
+                errors.Add("A theater must have at least one seat.");
+            }
+
+            if (errors.Any())
+            {
+                return BadRequest(new { message = "Validation failed.", errors });
             }
 
             // ✅ Create & Save the new theater
@@ -77,13 +90,12 @@ namespace Selu383.SP25.Api.Controllers
             {
                 Name = createDto.Name,
                 Address = createDto.Address,
-                SeatCount = createDto.SeatCount
+                SeatCount = createDto.SeatCount.Value
             };
 
             _dataContext.Theaters.Add(newTheater);
             _dataContext.SaveChanges();
 
-            // Return the new theater with 201 Created
             return CreatedAtAction(nameof(GetById), new { id = newTheater.Id }, new TheaterGetDto
             {
                 Id = newTheater.Id,
@@ -118,6 +130,12 @@ namespace Selu383.SP25.Api.Controllers
                 errors.Add("Address cannot be empty.");
             }
 
+            // ✅ Validate SeatCount
+            if (updateDto.SeatCount == null || updateDto.SeatCount <= 0)
+            {
+                errors.Add("A theater must have at least one seat.");
+            }
+
             if (errors.Any())
             {
                 return BadRequest(new { message = "Validation failed.", errors });
@@ -125,7 +143,7 @@ namespace Selu383.SP25.Api.Controllers
 
             theaterToUpdate.Name = updateDto.Name;
             theaterToUpdate.Address = updateDto.Address;
-            theaterToUpdate.SeatCount = updateDto.SeatCount;
+            theaterToUpdate.SeatCount = updateDto.SeatCount.Value;
 
             _dataContext.SaveChanges();
 
