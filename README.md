@@ -30,6 +30,7 @@ Follow these steps to add a new entity and expose it via an API.
 
 ### 1⃣ **Create a New Entity**
 - Inside the `Entity` folder, create a new **C# class**.
+- Make sure you inherit `IEntityBase` class
 - Example: `Movie.cs`
   
 ```csharp
