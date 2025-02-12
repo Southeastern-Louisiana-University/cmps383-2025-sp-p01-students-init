@@ -7,10 +7,10 @@ namespace Selu383.SP25.Api
 
         [Required]
         [MaxLength(120)]
-        public string Name { get; set; }    
+        public string? Name { get; set; }    
 
         [Required]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [Required]
         [Range(1, int.MaxValue)]
