@@ -17,7 +17,6 @@ namespace Selu383.SP25.Api
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Theater> Theaters { get; set; }
-        public DbSet<Hotel> Hotels { get; set; }
 
 
 
