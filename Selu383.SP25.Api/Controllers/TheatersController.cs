@@ -78,8 +78,8 @@ public class TheatersController : ControllerBase
         _context.Theaters.Add(theater);
         await _context.SaveChangesAsync();
 
-       
-        dto.Id = theater.Id; 
+
+        dto.Id = theater.Id;
 
         return CreatedAtAction(nameof(GetTheater), new { id = theater.Id }, dto);
     }
@@ -143,3 +143,4 @@ public class TheatersController : ControllerBase
 
 
 }
+
