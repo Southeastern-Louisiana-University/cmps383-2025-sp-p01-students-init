@@ -34,7 +34,6 @@ namespace Selu383.SP25.Api
                 });
             });
 
-
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();  
