@@ -12,6 +12,7 @@ namespace Selu383.SP25.Api.Controllers
     public class TheaterController : ControllerBase
     {
         private readonly DataContext _dataContext;
+
         public TheaterController(DataContext dataContext)
         {
             _dataContext = dataContext;
@@ -56,7 +57,7 @@ namespace Selu383.SP25.Api.Controllers
             return Ok(theater);
         }
 
-        // ✅ CREATE A NEW THEATER (WITH FIXED VALIDATION FOR SEATCOUNT)
+        // ✅ CREATE A NEW THEATER (WITH FIXED NULL HANDLING)
         [HttpPost]
         public IActionResult CreateTheater([FromBody] TheaterCreateDto createDto)
         {
@@ -75,7 +76,7 @@ namespace Selu383.SP25.Api.Controllers
             }
 
             // ✅ Validate SeatCount
-            if (createDto.SeatCount == null || createDto.SeatCount <= 0)
+            if (!createDto.SeatCount.HasValue || createDto.SeatCount <= 0)
             {
                 errors.Add("A theater must have at least one seat.");
             }
@@ -85,12 +86,12 @@ namespace Selu383.SP25.Api.Controllers
                 return BadRequest(new { message = "Validation failed.", errors });
             }
 
-            // ✅ Create & Save the new theater
+            // ✅ Fixed null assignments
             var newTheater = new Theater
             {
-                Name = createDto.Name,
-                Address = createDto.Address,
-                SeatCount = createDto.SeatCount.Value
+                Name = createDto.Name?.Trim() ?? "Default Name",
+                Address = createDto.Address?.Trim() ?? "Unknown Address",
+                SeatCount = createDto.SeatCount.GetValueOrDefault(1) // Ensures SeatCount is never null
             };
 
             _dataContext.Theaters.Add(newTheater);
@@ -105,7 +106,7 @@ namespace Selu383.SP25.Api.Controllers
             });
         }
 
-        // ✅ UPDATE EXISTING THEATER
+        // ✅ UPDATE EXISTING THEATER (WITH FIXED NULL HANDLING)
         [HttpPut("{id}")]
         public IActionResult UpdateTheater([FromBody] TheaterUpdateDto updateDto, int id)
         {
@@ -131,7 +132,7 @@ namespace Selu383.SP25.Api.Controllers
             }
 
             // ✅ Validate SeatCount
-            if (updateDto.SeatCount == null || updateDto.SeatCount <= 0)
+            if (!updateDto.SeatCount.HasValue || updateDto.SeatCount <= 0)
             {
                 errors.Add("A theater must have at least one seat.");
             }
@@ -141,9 +142,10 @@ namespace Selu383.SP25.Api.Controllers
                 return BadRequest(new { message = "Validation failed.", errors });
             }
 
-            theaterToUpdate.Name = updateDto.Name;
-            theaterToUpdate.Address = updateDto.Address;
-            theaterToUpdate.SeatCount = updateDto.SeatCount.Value;
+            // ✅ Fixed null handling
+            theaterToUpdate.Name = updateDto.Name?.Trim() ?? theaterToUpdate.Name;
+            theaterToUpdate.Address = updateDto.Address?.Trim() ?? theaterToUpdate.Address;
+            theaterToUpdate.SeatCount = updateDto.SeatCount.GetValueOrDefault(theaterToUpdate.SeatCount);
 
             _dataContext.SaveChanges();
 
