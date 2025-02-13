@@ -27,6 +27,12 @@ namespace Selu383.SP25.Api
 
             var app = builder.Build();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+                DbInitializer.Initialize(dbContext);
+            }
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
