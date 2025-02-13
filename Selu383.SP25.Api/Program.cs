@@ -30,7 +30,7 @@ namespace Selu383.SP25.Api
             // SQL Connection
             builder.Services.AddDbContext<DataContext>(Options =>
             {
-                Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                Options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext"));
             });
 
             // Dependency injection for user manager

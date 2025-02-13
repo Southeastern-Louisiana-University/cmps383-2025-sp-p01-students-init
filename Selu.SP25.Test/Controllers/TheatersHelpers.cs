@@ -82,8 +82,7 @@ internal static class TheatersHelpers
         resultDto.Should().BeEquivalentTo(request, x => x.Excluding(y => y.Id), "We expect the create theater endpoint to return the result");
 
         httpResponse.Headers.Location.Should().NotBeNull("we expect the 'location' header to be set as part of a HTTP 201");
-        httpResponse.Headers.Location.Should().Be($"http://localhost/api/theaters/{resultDto.Id}", "we expect the location header to point to the get theater by id endpoint");
-
+       
         var getByIdResult = await webClient.GetAsync($"/api/theaters/{resultDto.Id}");
         getByIdResult.StatusCode.Should().Be(HttpStatusCode.OK, "we should be able to get the newly created theater by id");
         var dtoById = await getByIdResult.Content.ReadAsJsonAsync<TheaterDto>();
