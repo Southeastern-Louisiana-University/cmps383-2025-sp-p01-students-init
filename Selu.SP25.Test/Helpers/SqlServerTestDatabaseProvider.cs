@@ -12,7 +12,7 @@ public sealed class SqlServerTestDatabaseProvider
     {
         databaseName = $"{DbPrefix}{Guid.NewGuid():N}";
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (false)
         {
             using var sqlConnection = new SqlConnection("server=(localdb)\\mssqllocaldb");
 
@@ -99,7 +99,7 @@ EXEC sp_MSForEachTable 'ENABLE TRIGGER ALL ON ?'
     private static string GetConnection(string name)
     {
         string connection;
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (true)
         {
             connection = $"Server=localhost,1433;Database={name};User Id=sa;Password=Password123!;TrustServerCertificate=True";
         }
