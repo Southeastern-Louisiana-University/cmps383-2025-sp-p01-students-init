@@ -70,6 +70,7 @@ public sealed class WebTestContext : IDisposable
 
         protected override void ConfigureWebHost(IWebHostBuilder x)
         {
+            Console.WriteLine(connectionString);
             x.ConfigureAppConfiguration(y =>
             {
                 y.Add(new MemoryConfigurationSource
