@@ -21,6 +21,7 @@ namespace Selu383.SP25.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CMPS 383 API", Version = "v1" });
             });
 
+
             var connectionString = builder.Configuration.GetConnectionString("DataContext");
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddScoped<DbInitializer>();
