@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Selu383.SP25.Api.Data;
+using Selu383.SP25.Api;
 
 #nullable disable
 
 namespace Selu383.SP25.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250203180935_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250213004947_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace Selu383.SP25.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Selu383.SP25.Api.Entities.Theatre", b =>
+            modelBuilder.Entity("Selu383.SP25.Api.Entities.Theater", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,14 +38,15 @@ namespace Selu383.SP25.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.Property<int>("SeatCount")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Theatres");
+                    b.ToTable("Theaters");
                 });
 #pragma warning restore 612, 618
         }

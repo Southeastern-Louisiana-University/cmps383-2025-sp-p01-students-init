@@ -1,26 +1,28 @@
+
 using Microsoft.EntityFrameworkCore;
 using Selu383.SP25.Api.Entities;
+using System.Data;
+using System.Reflection;
 
-namespace Selu383.SP25.Api.Data
+namespace Selu383.SP25.Api
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options)
+            : base(options)
         {
-            // Theatre tables
-
-
         }
+
+        // Define each entity below
+        
+        public DbSet<Theater> Theaters { get; set; }
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Theater>().HasData(
-                new Theater { Id = 1, Name = "vatte ko Hall", Address = "Hammond", SeatCount = 34 },
-                new Theater { Id = 2, Name = "aakashHall", Address = "BatonRouge", SeatCount = 23}
-                );
-
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).GetTypeInfo().Assembly);
         }
-        public DbSet<Theater> Theatres { get; set; }
     }
 }

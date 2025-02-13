@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using Selu383.SP25.Api.Entities;
-using Selu383.SP25.Api.Data;
 using AutoMapper;
 
 namespace Selu383.SP25.Api.Controllers
@@ -38,14 +37,14 @@ namespace Selu383.SP25.Api.Controllers
         [HttpGet]
         public ActionResult<List<Theater>> GetTheatres()
         {
-            var theatre = _dataContext.Theatres.ToList();
+            var theatre = _dataContext.Theaters.ToList();
             var theatreDto = _mapper.Map<List<TheaterDto>>(theatre);
             return Ok(theatreDto);
         }
         [HttpGet("{id}")]
         public ActionResult<Theater>GetTheatreById(int id)
         {
-            var theatre = _dataContext.Theatres.FirstOrDefault(x => x.Id == id);
+            var theatre = _dataContext.Theaters.FirstOrDefault(x => x.Id == id);
             if(theatre is null)
             {
                 return NotFound();
@@ -69,7 +68,7 @@ namespace Selu383.SP25.Api.Controllers
                 }
 
                 var newTheatre = _mapper.Map<Theater>(newTheatreDto);
-                _dataContext.Theatres.Add(newTheatre);
+                _dataContext.Theaters.Add(newTheatre);
                 _dataContext.SaveChanges();
                 var theatreDto = _mapper.Map<TheaterDto>(newTheatre);
                 return CreatedAtAction(nameof(GetTheatreById), new { id = theatreDto.Id }, theatreDto);
@@ -87,7 +86,7 @@ namespace Selu383.SP25.Api.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateTheatre(int id, TheaterUpdateDto updateTheatreDto)
         {
-            var existingTheatre = _dataContext.Theatres.FirstOrDefault(x => x.Id == id);
+            var existingTheatre = _dataContext.Theaters.FirstOrDefault(x => x.Id == id);
 
             if (existingTheatre == null)
             {
@@ -103,12 +102,12 @@ namespace Selu383.SP25.Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult deleteTheatre(int id)
         {
-            var theatre = _dataContext.Theatres.FirstOrDefault(x =>x.Id == id);
+            var theatre = _dataContext.Theaters.FirstOrDefault(x =>x.Id == id);
             if (theatre is null)
             {
                 return NotFound();
             }
-           _dataContext.Theatres.Remove(theatre);
+           _dataContext.Theaters.Remove(theatre);
            _dataContext.SaveChanges();
             return Ok();
         }

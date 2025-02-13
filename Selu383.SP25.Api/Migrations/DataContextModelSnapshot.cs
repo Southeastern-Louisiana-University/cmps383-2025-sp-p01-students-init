@@ -2,20 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Selu383.SP25.Api.Data;
+using Selu383.SP25.Api;
 
 #nullable disable
 
 namespace Selu383.SP25.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250206004347_SecondMigration")]
-    partial class SecondMigration
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +21,7 @@ namespace Selu383.SP25.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Selu383.SP25.Api.Entities.Theatre", b =>
+            modelBuilder.Entity("Selu383.SP25.Api.Entities.Theater", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,23 +43,7 @@ namespace Selu383.SP25.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Theatres");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "Hammond",
-                            Name = "vatte ko Hall",
-                            SeatCount = 34
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "BatonRouge",
-                            Name = "aakashHall",
-                            SeatCount = 23
-                        });
+                    b.ToTable("Theaters");
                 });
 #pragma warning restore 612, 618
         }

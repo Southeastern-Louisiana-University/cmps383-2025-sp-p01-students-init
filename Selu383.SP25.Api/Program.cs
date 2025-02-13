@@ -2,27 +2,27 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
-using Selu383.SP25.Api.Data;
 using System.Reflection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace Selu383.SP25.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<DataContext>(options=> options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections") ));
+            builder.Services.AddDbContext<DataContext>(options=> options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext") ));
             builder.Services.AddEndpointsApiExplorer();
             // This service is for Automapper
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext")));
             // This service is for Swagger UI
             builder.Services.AddSwaggerGen(options =>
             {
@@ -37,9 +37,19 @@ namespace Selu383.SP25.Api
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
-
+            builder.Services.AddOpenApi();  
             var app = builder.Build();
+
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+                await dbContext.Database.MigrateAsync();
+                await TheaterSeeder.Initialize(dbContext);
+
+            }
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
